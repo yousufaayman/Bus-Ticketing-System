@@ -1,4 +1,3 @@
-// src/Login.js
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import axios from 'axios';
@@ -21,7 +20,7 @@ const Login = () => {
       });
       if (response.status === 200) {
         const { token } = response.data;
-        login(token);
+        login(token, email); // Pass the email here
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         navigate('/dashboard');
       }
