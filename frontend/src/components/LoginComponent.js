@@ -22,6 +22,7 @@ const Login = () => {
       if (response.status === 200) {
         const { token } = response.data;
         login(token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         navigate('/dashboard');
       }
     } catch (error) {
