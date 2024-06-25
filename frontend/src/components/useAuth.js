@@ -1,7 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { auth } from './firebase';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -12,16 +11,27 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
-
-    return unsubscribe;
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setCurrentUser({ token });
+    }
+    setLoading(false);
   }, []);
 
+  const login = (token) => {
+    localStorage.setItem('authToken', token);
+    setCurrentUser({ token });
+  };
+
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    setCurrentUser(null);
+  };
+
   const value = {
-    currentUser
+    currentUser,
+    login,
+    logout,
   };
 
   return (
